@@ -1,19 +1,34 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python application
+name: CSV Check
 
 on:
   pull_request:
     branches: [ master ]
 
 jobs:
+  #automerge:
   build:
 
     runs-on: ubuntu-latest
-
+    
+    if: contains(github.ref, "master")
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout master
+      uses: actions/checkout@v2
+      with: 
+        ref: master
+    - name: Copy old CSV to /tmp
+      run: |
+        cp test.csv /tmp/test-master.csv 
+    - name: Checkout ci-test
+      uses: actions/checkout@v2
+      with: 
+        ref: ci-test
+    - name: Copy new CSV to /tmp
+      run: |
+        cp test.csv /tmp/test-staged.csv
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
@@ -21,13 +36,13 @@ jobs:
     - name: Install dependencies
       run: |
         ls
+        cat /tmp/test-staged.csv
+        cat /tmp/test-master.csv
         #python -m pip install --upgrade pip
         #if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Print Hello
+    - name: Compare CSVs
       run: |
         python3 -c "print('Hello from Python')"
         python3 ./CI/check_csv.py
-        cat test.csv
         git branch
         git describe --always
-
