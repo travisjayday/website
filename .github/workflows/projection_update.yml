@@ -49,12 +49,12 @@ jobs:
 
     - name: Run Checks 
       run: |
-        echo [*] Comparing Global CSVs... (Checks 1-4)
+        echo "[*] Comparing Global CSVs... (Checks 1-4)"
         python3 ./.github/workflows/deployment-scripts/check_global.py \
                     /tmp/Global-staged.csv \
                     /tmp/Global-master.csv
 
-        echo [*] Checking historic CSV... (Check 5)
+        echo "[*] Checking historic CSV... (Check 5)"
         python3 ./.github/workflows/deployment-scripts/check_equal.py \
                     /tmp/Global-staged.csv \
                     /tmp/Global_V2_DATE.csv
