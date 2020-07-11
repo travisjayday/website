@@ -59,7 +59,9 @@ if set(df_staged.columns) != set(df_master.columns):
 #
 info_check("Checking for NaNs")
 if df_staged.isnull().values.any(): 
-    fail_check("Found NaN entries in staged in {}".format(staged_csv_path))
+    rows = list(df_staged[df_staged.isnull().any(axis=1)].index.to_numpy())
+    fail_check("Found NaN entries in {}, at rows {}".format(
+                staged_csv_path, rows))
 
 #
 # Check #2.5: "as well as the type of the entries"
